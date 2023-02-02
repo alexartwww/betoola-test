@@ -1,0 +1,37 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7.23
+    command: --default-authentication-plugin=mysql_native_password --explicit-defaults-for-timestamp=1 --innodb-buffer-pool-size=${MYSQL_INNODB_BUFFER_POOL_SIZE} --innodb-log-file-size=${MYSQL_INNODB_LOG_FILE_SIZE} --innodb-log-buffer-size=${MYSQL_INNODB_LOG_BUFFER_SIZE} --innodb-flush-log-at-trx-commit=${MYSQL_INNODB_FLUSH_LOG_AT_TRX_COMMIT} --sql-mode=${MYSQL_SQL_MODE} --query-cache-limit=${MYSQL_QUERY_CACHE_LIMIT} --query-cache-size=${MYSQL_QUERY_CACHE_SIZE} --key-buffer-size=${MYSQL_KEY_BUFFER_SIZE} --max-allowed-packet=${MYSQL_MAX_ALLOWED_PACKET} --init-connect=${MYSQL_INIT_CONNECT} --character-set-server=${MYSQL_CHARACTER_SET_SERVER} --collation-server=${MYSQL_COLLATION_SERVER}
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    volumes:
+      - ./.docker/services/mysql/data:/var/lib/mysql
+      - ./.docker/services/mysql/files:/var/lib/mysql-files
+    restart: ${MYSQL_RESTART}
+  app:
+    image: betoola:${ver}
+    user: "1000:1000"
+    command: [ "echo", "Betoola" ]
+    volumes:
+      - .:/var/www/src
+    depends_on:
+      - mysql
+  php-fpm:
+    image: betoola:${ver}
+    volumes:
+      - .:/var/www/src
+    restart: ${PHP_FPM_RESTART}
+    depends_on:
+      - mysql
+  nginx:
+    image: nginx:1.23.3
+    command: ['nginx', '-g', 'daemon off;']
+    ports:
+      - "${NGINX_EXTERNAL_PORT}:80"
+    volumes:
+      - .:/usr/share/nginx/html
+      - ./.docker/services/nginx/conf:/etc/nginx/conf.d
+    restart: ${NGINX_RESTART}
+    depends_on:
+      - php-fpm

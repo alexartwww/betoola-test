@@ -1,0 +1,13 @@
+.hg
+.hgignore
+.hgsub
+.hgsubstate
+.dockerignore
+.env
+.git
+.docker
+codestyle.xml
+docker-compose.yml
+Makefile
+Dockerfile
+init.sql

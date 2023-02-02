@@ -1,0 +1,17 @@
+{
+    "name": "alexartwww/betoola",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Alexartwww\\Betoola\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Artem Aleksashkin"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
