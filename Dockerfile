@@ -14,9 +14,6 @@ RUN \
   usermod -u 1000 www-data && \
   groupmod -g 1000 www-data && \
   mkdir -p /var/www/src && \
-  mkdir -p /var/www/data && \
-  mkdir -p /var/www/images && \
-  mkdir -p -m 777 /tmp/app && \
   chown -R www-data:www-data /var/www &&\
   rm -rf /var/lib/apt/lists/*
 
