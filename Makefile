@@ -41,15 +41,14 @@ backup: ## Backups the app
 	mkdir -p ${BACKUPS_DIR_CURRENT_DB}
 
 	ver=${ver} ${DB_DUMP}\
-	 | grep -v "${DB_DUMP_SKIP}"\
-	 | gzip -9 > ${BACKUPS_DIR_CURRENT_DB}/betoola.sql.gz
+	 | grep -v "${DB_DUMP_SKIP}" > ${BACKUPS_DIR_CURRENT_DB}/betoola.sql
 
 restore: ## Restores the app
 	@echo "Restoring from "${BACKUPS_DIR_CURRENT_DB}
 	@echo "Restoring from "${DB_DIR}"/init.sql"
 	cat ${SQL_DIR}/init.sql | ver=${ver} ${DB_RESTORE_ROOT}
 	@echo "Restoring from "${BACKUPS_DIR_CURRENT_DB}/betoola.sql.gz
-	zcat ${RESTORE_DIR_CURRENT_DB}/betoola.sql.gz | grep -v "${DB_DUMP_SKIP}" | ver=${ver} ${DB_RESTORE}
+	cat ${RESTORE_DIR_CURRENT_DB}/betoola.sql | grep -v "${DB_DUMP_SKIP}" | ver=${ver} ${DB_RESTORE}
 	@echo "Done"
 
 mysql:
