@@ -8,15 +8,8 @@ RUN \
       ca-certificates\
       apt-utils\
       apt-transport-https\
-      locales\
-      language-pack-ru-base\
-      tzdata\
-      cron\
       wget\
-      unzip\
       curl\
-      git\
-      mercurial\
       && \
   usermod -u 1000 www-data && \
   groupmod -g 1000 www-data && \
@@ -25,19 +18,8 @@ RUN \
   mkdir -p /var/www/images && \
   mkdir -p -m 777 /tmp/app && \
   chown -R www-data:www-data /var/www &&\
-  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen &&\
-  echo "en_GB.UTF-8 UTF-8" >> /etc/locale.gen &&\
-  echo "ru_RU.UTF-8 UTF-8" >> /etc/locale.gen &&\
-  DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive locales &&\
-  ln -snf /usr/share/zoneinfo/Europe/Moscow /etc/localtime &&\
-  echo "Europe/Moscow" > /etc/timezone &&\
-  DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive tzdata &&\
   rm -rf /var/lib/apt/lists/*
 
-ENV LANG  "ru_RU.UTF-8"
-ENV LANGUAGE "ru_RU:ru"
-ENV LC_MESSAGES "POSIX"
-ENV TZ "Europe/Moscow"
 WORKDIR /var/www/src
 
 # PHP
@@ -69,8 +51,8 @@ COPY --chown=www-data:www-data . .
 
 # COMPOSER
 USER www-data
-#RUN \
-#  composer install --no-ansi
+RUN \
+  composer install --no-ansi
 
 USER root
 
