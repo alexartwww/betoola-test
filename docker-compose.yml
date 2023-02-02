@@ -15,12 +15,14 @@ services:
     command: [ "echo", "Betoola" ]
     volumes:
       - .:/var/www/src
+      - ./.docker/php:/etc/php
     depends_on:
       - mysql
   php-fpm:
     image: betoola:${ver}
     volumes:
       - .:/var/www/src
+      - ./.docker/php:/etc/php
     restart: ${PHP_FPM_RESTART}
     depends_on:
       - mysql
@@ -30,7 +32,7 @@ services:
     ports:
       - "${NGINX_EXTERNAL_PORT}:80"
     volumes:
-      - .:/usr/share/nginx/html
+      - .:/var/www/src
       - ./.docker/services/nginx/conf:/etc/nginx/conf.d
     restart: ${NGINX_RESTART}
     depends_on:
