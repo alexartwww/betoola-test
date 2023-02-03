@@ -32,7 +32,7 @@ CREATE TABLE `prices`
     `variant`    varchar(255) NOT NULL,
     `currency`   varchar(20) NOT NULL,
     `price`      DECIMAL(10,2),
-    UNIQUE KEY `product_id_variant` (`product_id`, `variant`, `currency`),
+    UNIQUE KEY `product_id_variant_currency` (`product_id`, `variant`, `currency`),
     FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;

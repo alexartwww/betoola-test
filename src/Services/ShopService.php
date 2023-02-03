@@ -14,21 +14,6 @@ class ShopService implements ShopServiceInterface
         $this->dbService = $dbService;
     }
 
-    public function beginTransaction()
-    {
-        $this->dbService->beginTransaction();
-    }
-
-    public function commit()
-    {
-        $this->dbService->commit();
-    }
-
-    public function rollBack()
-    {
-        $this->dbService->rollBack();
-    }
-
     public function getCategories(): array
     {
         $sth = $this->dbService->prepare('

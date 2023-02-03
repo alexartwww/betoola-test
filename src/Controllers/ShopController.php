@@ -2,6 +2,7 @@
 
 namespace Alexartwww\Betoola\Controllers;
 
+use Alexartwww\Betoola\Interfaces\DBServiceInterface;
 use Alexartwww\Betoola\Interfaces\ShopServiceInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,10 +11,12 @@ use Slim\Exception\HttpBadRequestException;
 class ShopController
 {
     private ShopServiceInterface $shopService;
+    private DBServiceInterface $dbService;
 
-    public function __construct(ShopServiceInterface $shopService)
+    public function __construct(ShopServiceInterface $shopService, DBServiceInterface $dbService)
     {
         $this->shopService = $shopService;
+        $this->dbService = $dbService;
     }
 
     public function home(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
@@ -78,18 +81,18 @@ class ShopController
             throw new HttpBadRequestException($request, 'price must be positive float.');
         }
 
-        $this->shopService->beginTransaction();
+        $this->dbService->beginTransaction();
 
         if (isset($bodyAssoc['category_name']) && !isset($bodyAssoc['category_id'])) {
             $category = $this->shopService->getCategoryByName($bodyAssoc['category_name']);
             if (!$category) {
-                $this->shopService->rollBack();
+                $this->dbService->rollBack();
                 throw new HttpBadRequestException($request, 'category_name does not exist ' . $bodyAssoc['category_name']);
             }
         } else {
             $category = $this->shopService->getCategoryById(intval($bodyAssoc['category_id']));
             if (!$category) {
-                $this->shopService->rollBack();
+                $this->dbService->rollBack();
                 throw new HttpBadRequestException($request, 'category_id does not exist ' . $bodyAssoc['category_id']);
             }
         }
@@ -105,7 +108,7 @@ class ShopController
         } else {
             $product = $this->shopService->getProductById($categoryId, intval($bodyAssoc['product_id']));
             if (!$product) {
-                $this->shopService->rollBack();
+                $this->dbService->rollBack();
                 throw new HttpBadRequestException($request, 'product_id does not exist ' . $bodyAssoc['product_id']);
             } else {
                 $productId = $product['id'];
@@ -118,13 +121,13 @@ class ShopController
 
         $currentPrice = $this->shopService->getPrice($productId, $variant, $currency);
         if ($currentPrice) {
-            $this->shopService->rollBack();
+            $this->dbService->rollBack();
             throw new HttpBadRequestException($request, 'This product aready have price for variant ' . $currentPrice['variant'] . ' for currency ' . $currency . ' = ' . $price);
         } else {
             $this->shopService->setPrice($productId, $variant, $currency, $price);
         }
 
-        $this->shopService->commit();
+        $this->dbService->commit();
         $response->getBody()->write(json_encode(['statusCode' => 201], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
         return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
     }

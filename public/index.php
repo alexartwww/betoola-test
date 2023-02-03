@@ -36,7 +36,8 @@ $container->set('ShopService', function ($container) {
 });
 $container->set('ShopController', function ($container) {
     $shopService = $container->get('ShopService');
-    $controller = new ShopController($shopService);
+    $dbService = $container->get('DBService');
+    $controller = new ShopController($shopService, $dbService);
     return $controller;
 });
 
