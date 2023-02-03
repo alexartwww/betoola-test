@@ -1,0 +1,38 @@
+GET http://localhost:10000/api/categories HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+<> 2022-07-14T112719.500.txt
+
+###
+
+GET http://localhost:10000/api/products HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+<> 2022-07-14T112719.500.txt
+
+###
+
+GET http://localhost:10000/api/prices HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+<> 2022-07-14T112719.500.txt
+
+###
+
+POST http://localhost:10000/api/prices HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "product_name": "Converse All Star",
+  "category_name": "Shoes",
+  "currency": "USD",
+  "variant": "6.0",
+  "price": 299.0
+}
+<> 2022-07-14T112719.500.txt
+
+###

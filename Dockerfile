@@ -14,8 +14,7 @@ RUN \
   usermod -u 1000 www-data && \
   groupmod -g 1000 www-data && \
   mkdir -p /var/www/src && \
-  chown -R www-data:www-data /var/www &&\
-  rm -rf /var/lib/apt/lists/*
+  chown -R www-data:www-data /var/www
 
 WORKDIR /var/www/src
 
@@ -39,17 +38,13 @@ RUN \
       sed -i -E 's|listen = .*?|listen = 9000|g' /etc/php/8.1/fpm/pool.d/www.conf && \
       sed -i "s|;*error_log\s*=\s*php_errors\.log|error_log = /dev/stderr|g" /etc/php/8.1/cli/php.ini && \
       wget -O /usr/local/bin/composer https://getcomposer.org/download/2.5.1/composer.phar && \
-      chmod +x /usr/local/bin/composer && \
-      rm -rf /var/lib/apt/lists/*
-
-#COPY ./conf/php /etc/php
+      chmod +x /usr/local/bin/composer
 
 COPY --chown=www-data:www-data . .
 
 # COMPOSER
 USER www-data
-RUN \
-  composer install --no-ansi
+RUN composer install --no-ansi
 
 USER root
 

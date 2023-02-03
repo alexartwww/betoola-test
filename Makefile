@@ -3,7 +3,7 @@ include .env
 SQL_DIR=.docker/sql
 BACKUPS_DIR=.docker/backups
 
-BACKUPS_DIR_DB=${BACKUPS_DIR}/db
+BACKUPS_DIR_DB=${BACKUPS_DIR}/mysql
 
 BACKUPS_DIR_CURRENT_DB=${BACKUPS_DIR_DB}/$(shell date +%Y-%m-%d-%H-%M-%S)
 RESTORE_DIR_CURRENT_DB=${BACKUPS_DIR_DB}/$(shell ls -1r ${BACKUPS_DIR_DB} | head -1)
@@ -40,15 +40,15 @@ down: ## Stops the app
 backup: ## Backups the app
 	mkdir -p ${BACKUPS_DIR_CURRENT_DB}
 
-	ver=${ver} ${DB_DUMP}\
-	 | grep -v "${DB_DUMP_SKIP}" > ${BACKUPS_DIR_CURRENT_DB}/betoola.sql
+	ver=${ver} ${MYSQL_DUMP}\
+	 | grep -v "${MYSQL_DUMP_SKIP}" > ${BACKUPS_DIR_CURRENT_DB}/betoola.sql
 
 restore: ## Restores the app
 	@echo "Restoring from "${BACKUPS_DIR_CURRENT_DB}
-	@echo "Restoring from "${DB_DIR}"/init.sql"
-	cat ${SQL_DIR}/init.sql | ver=${ver} ${DB_RESTORE_ROOT}
-	@echo "Restoring from "${BACKUPS_DIR_CURRENT_DB}/betoola.sql.gz
-	cat ${RESTORE_DIR_CURRENT_DB}/betoola.sql | grep -v "${DB_DUMP_SKIP}" | ver=${ver} ${DB_RESTORE}
+	@echo "Restoring from "${SQL_DIR}"/init.sql"
+	cat ${SQL_DIR}/init.sql | ver=${ver} ${MYSQL_RESTORE_ROOT}
+	@echo "Restoring from "${RESTORE_DIR_CURRENT_DB}/betoola.sql
+	cat ${RESTORE_DIR_CURRENT_DB}/betoola.sql | grep -v "${MYSQL_DUMP_SKIP}" | ver=${ver} ${MYSQL_RESTORE}
 	@echo "Done"
 
 mysql:
@@ -71,3 +71,9 @@ shell: ## Bash
 
 build: ## Build docker
 	ver=${ver} docker build --rm -t betoola:latest -t betoola:${ver} .
+
+push:
+	echo "Good to implement push method"
+
+pull:
+	echo "Good to implement pull method"
