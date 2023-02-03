@@ -13,9 +13,9 @@ services:
     image: betoola:${ver}
     user: "1000:1000"
     command: [ "echo", "Betoola" ]
-    volumes:
-      - .:/var/www/src
-      - ./.docker/php:/etc/php
+#    volumes:
+#      - .:/var/www/src
+#      - ./.docker/php:/etc/php
     environment:
       - MYSQL_HOST=${MYSQL_HOST}
       - MYSQL_DB=${MYSQL_DB}
@@ -25,9 +25,9 @@ services:
       - mysql
   php-fpm:
     image: betoola:${ver}
-    volumes:
-      - .:/var/www/src
-      - ./.docker/php:/etc/php
+#    volumes:
+#      - .:/var/www/src
+#      - ./.docker/php:/etc/php
     restart: ${PHP_FPM_RESTART}
     environment:
       - MYSQL_HOST=${MYSQL_HOST}
