@@ -28,10 +28,10 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo apt-get install make
 ```
 
-### Install project
+### Installation
 
 ```bash
-git clone ... 
+git clone git@github.com:alexartwww/betoola-test.git
 cd ./betoola-test
 cp ./.env.dev ./.env
 ver=1.0.0 make build up
@@ -39,7 +39,7 @@ sleep 10
 ver=1.0.0 make restore
 ```
 
-### Test
+### Checking
 
 Open http://localhost:10000/ You should see Hello world! and current datetime.
 
